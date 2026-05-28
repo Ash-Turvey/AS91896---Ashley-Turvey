@@ -2,6 +2,11 @@ import json
 import easygui
 from easygui import *
 import sys
+from datetime import datetime
+
+entry_list = {
+    
+}
 
 #Pull data from json file
 def load_data():
@@ -18,28 +23,29 @@ def validate_input(input_):
     while True:
         value = easygui.enterbox(input_)
 
+        #check if they clicked the cancel or X button
         if value is None:
             msgbox("Going home...")
             home_page()
-        
 
-
+        #Make sure they have inputted a valid input, and make sure the
+        #amount they picked is no longer than a day.
         try:
-            minutes = float(value)
+            minutes = int(value)
 
             if minutes <= 0:
                 msgbox("Cant enter negative numbers.")
                 continue
 
             elif minutes >= 1440:
-
+                msgbox("Activity cannot be longer than 1 day.")
+                continue
+            else:
+                        #give back the valid input to be used
+                return minutes
 
         except ValueError:
-            counter += 1
-            if counter < 5:
-                msgbox("That's not a number. Try again.")
-
-
+            msgbox("That's not a number. Try again.")
 
 #Make a time entry
 def add_activity_page():
@@ -61,13 +67,17 @@ to make an entry for?", "activities_select", activities)
         activities_hours = validate_input(f"How many minutes did you spend \
 doing {activities_select}?")
         
-        if activities_hours is None:
-            print("none")
-        else:
-            return activities_hours, activities_select
+        if activities_hours is not None:
+ 
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
-    return activities_select, activities_hours
+            entry_list[timestamp] = {
+                "activity": activities_select,
+                "minutes": activities_hours,
+            }
+            
+            #Loop back to home page after adding
+            home_page()
 
 #Show either todays daily summary or another days summary
 def history_page():
@@ -78,16 +88,19 @@ def history_page():
 def analytics_page(data):
     print("placeholder")
 
+#The page where the other pages can be accessed from.
 def home_page():
     pages = ["Add Entry", "View History", "Weekly Analytics", "Leave"]
     home = easygui.buttonbox("Welcome to Wiggles Time Tracker!", "homepage",\
 pages)
     if home == "Add Entry":
-        add_activity_page()
+        return add_activity_page()
     elif home == "View History":
         history_page()
     elif home == "Weekly Analytics":
         analytics_page()
     else:
         sys.exit()
+
 home_page()
+print(entry_list)
