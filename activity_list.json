@@ -1,3 +1,14 @@
 {
-
+    "2026-05-29 14:00:50": {
+        "activity": "Sport",
+        "minutes": 121
+    },
+    "2026-05-29 14:00:55": {
+        "activity": "Music",
+        "minutes": 232
+    },
+    "2026-05-29 14:01:07": {
+        "activity": "Sport",
+        "minutes": 123
+    }
 }
