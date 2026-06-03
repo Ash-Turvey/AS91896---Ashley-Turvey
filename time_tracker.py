@@ -50,70 +50,73 @@ def validate_input(input_):
 
 #Make a time entry
 def add_activity_page():
-    #building a list with the ways people spend their time.
     activities = ["Study/Work", "Sport", "Music", "Screen", "Family/Friends", \
 "Other"]
+    activities_select = easygui.choicebox("Which catagory would you like to \
+make an entry for?", "activities_select", activities)
     
-    #letting them pick one
-    activities_select = easygui.choicebox("Which catagory would you like \
-to make an entry for?", "activities_select", activities)
-    
-    #Checking to make sure they clicked one, and making them do it again
-    #if not
     if activities_select is None:
         easygui.msgbox("Exiting...")
         home_page()
-
-    #Ask for minutes, and make sure its valid using the valid input 
-    #function
     else:
         activities_hours = validate_input(f"How many minutes did you spend \
 doing {activities_select}?")
         
-        #Making the timestamped entry
         if activities_hours is not None:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            entry_list[timestamp] = {
-                "activity": activities_select,
-                "minutes": activities_hours,
-            }
-            time_checker = entry_list[timestamp][entry_list]
-            print(time_checker)
-            #Save the entry to the json file
-            save_data(entry_list)
+            #Load data
+            entry_list = load_data()
 
-            #Loop back to home page after adding
+            #Add dictionary to the list
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            entry_list.append({
+                "timestamp": timestamp,
+                "activity": activities_select,
+                "minutes": activities_hours
+            })
+
+            #Save it back
+            save_data(entry_list)
             home_page()
 
 #Show whole history
 def history_page():
     history_pull = load_data() 
-    grouped_data = defaultdict(list)
+    grouped_data = {}
 
-    #make the output look presentable by sorting everything by date, and
-    #printing each days activitys together
-    for timestamp, details in history_pull.items():
-        date_only = timestamp.split(" ")[0] 
-        activity_text = f"{details['activity']} ({details['minutes']} mins)"
-        grouped_data[date_only].append(activity_text)
+    # 1. Simple, clean loop through the list items
+    for item in history_pull:
+        date_only = item["timestamp"].split(" ")[0]
+        activity_name = item["activity"]
+        minutes = item["minutes"]
+        
+        #Make sure the date dictionary exists
+        if date_only not in grouped_data:
+            grouped_data[date_only] = {}
+            
+        #Make sure the activity key exists under the date
+        if activity_name not in grouped_data[date_only]:
+            grouped_data[date_only][activity_name] = 0
+            
+        #Add the minutes
+        grouped_data[date_only][activity_name] += minutes
 
+    #Make the output text window
     final_output = ""
-
-    #Loop through the grouped data, and append each section of the data
-    #to final output, ready to be put in a msgbox
-    for date, activities in grouped_data.items():
+    for date, activities in sorted(grouped_data.items()):
         final_output += f"Date: {date}\n"
-        for action in activities:
-            final_output += f"  - {action}\n"
+        for action, mins in activities.items():
+            final_output += f"  - {action}: {mins} mins\n"
         final_output += "\n"
         
-    #put all the data from the previous loops into a msgbox
+    if not final_output:
+        final_output = "No history found yet!"
+
     msgbox(final_output)
     home_page()
 
 #Show daily average for activities in the past 7 days, and show most
 #done activities
-def analytics_page(data):
+def analytics_page():
     print("placeholder")
 
 #The page where the other pages can be accessed from.
@@ -132,32 +135,3 @@ pages)
 
 home_page()
 
-
-
-"""
-history_pull = load_data() 
-    
-    # 1. Create a dictionary that automatically starts an empty list for new dates
-    grouped_data = defaultdict(list)
-    
-    # 2. Loop through JSON keys (timestamps) and values (activity details)
-    for timestamp, details in history_pull.items():
-        # Split the string by space and take the first part: "2026-05-29"
-        date_only = timestamp.split(" ")[0] 
-        
-        # Format how you want the individual activity text to look
-        activity_text = f"{details['activity']} ({details['minutes']} mins)"
-        
-        # Add it to the list for that specific date
-        grouped_data[date_only].append(activity_text)
-        
-    # 3. Build your single message box string
-    final_output = ""
-    for date, activities in grouped_data.items():
-        final_output += f"Date: {date}\n"
-        for act in activities:
-            final_output += f"  - {act}\n"
-        final_output += "\n" # Blank line between different dates
-        
-    msgbox(final_output)
-"""

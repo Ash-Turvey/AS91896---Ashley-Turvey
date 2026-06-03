@@ -1,14 +1,37 @@
-{
-    "2026-05-29 14:00:50": {
+[
+    {
+        "timestamp": "2026-06-03 11:57:35",
+        "activity": "Screen",
+        "minutes": 12
+    },
+    {
+        "timestamp": "2026-06-03 11:57:49",
         "activity": "Sport",
-        "minutes": 121
+        "minutes": 23
     },
-    "2026-05-29 14:00:55": {
-        "activity": "Music",
-        "minutes": 232
+    {
+        "timestamp": "2026-06-03 12:00:14",
+        "activity": "Screen",
+        "minutes": 12
     },
-    "2026-05-29 14:01:07": {
+    {
+        "timestamp": "2026-06-04 10:01:37",
+        "activity": "Screen",
+        "minutes": 123
+    },
+    {
+        "timestamp": "2026-06-04 10:19:15",
+        "activity": "Screen",
+        "minutes": 12
+    },
+    {
+        "timestamp": "2026-06-04 10:19:22",
+        "activity": "Screen",
+        "minutes": 1212
+    },
+    {
+        "timestamp": "2026-06-04 10:32:42",
         "activity": "Sport",
         "minutes": 123
     }
-}
+]
