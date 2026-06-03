@@ -117,8 +117,16 @@ def history_page():
 #Show daily average for activities in the past 7 days, and show most
 #done activities
 def analytics_page():
-    print("placeholder")
+    activity_data = load_data()
+    screen = [0, 0]
+    sport = [0, 0]
+    work = [0, 0]
+    family = [0, 0]
+    music = [0, 0]
+    other = [0, 0]
+    for mean_activity in activity_data:
 
+    for mean_time in activity_data():
 #The page where the other pages can be accessed from.
 def home_page():
     pages = ["Add Entry", "View History", "Weekly Analytics", "Leave"]
@@ -135,3 +143,6 @@ pages)
 
 home_page()
 
+
+
+#I need to continue the analytics page. 
