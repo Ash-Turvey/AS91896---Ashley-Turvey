@@ -117,16 +117,81 @@ def history_page():
 #Show daily average for activities in the past 7 days, and show most
 #done activities
 def analytics_page():
+
     activity_data = load_data()
+
+    if not activity_data:
+        msgbox("You have input data to view your analytics")
+        home_page()
+
     screen = [0, 0]
     sport = [0, 0]
     work = [0, 0]
     family = [0, 0]
     music = [0, 0]
     other = [0, 0]
-    for mean_activity in activity_data:
 
-    for mean_time in activity_data():
+    now = datetime.now()
+    data = False
+
+    for entry in activity_data:
+        data = True
+        category = entry["activity"]
+        mins = entry["minutes"]
+
+            # Match and update your specific category lists
+        if category == "Screen":
+            screen[0] += mins
+            screen[1] += 1
+        elif category == "Sport":
+            sport[0] += mins
+            sport[1] += 1
+        elif category == "Study/Work":
+            work[0] += mins
+            work[1] += 1
+        elif category == "Family/Friends":
+            family[0] += mins
+            family[1] += 1
+        elif category == "Music":
+            music[0] += mins
+            music[1] += 1
+        elif category == "Other":
+            other[0] += mins
+            other[1] += 1
+
+        if not data:
+            msgbox("No activity tracked in the past 7 days!")
+            return home_page()
+        
+        totals = {
+        "Screen": screen[0],
+        "Sport": sport[0],
+        "Study/Work": work[0],
+        "Family/Friends": family[0],
+        "Music": music[0],
+        "Other": other[0]
+    }
+
+    #Find the activity name with the most total minutes
+    popular_activity = max(totals, key=totals.get)
+
+    #Make the output text display
+    text = "Past 7 Days Analytics\n\n"
+    text += "Daily Averages (Total minuntes a 7 days):\n"
+    
+    for activity_name, total_mins in totals.items():
+        daily_avg = total_mins / 7.0
+        text += f"  - {activity_name}: {daily_avg:.1f} mins a day\n"
+
+    text += f"\nMost Used Activity:\n"
+    text += f"  - {popular_activity} ({totals[popular_activity]} \
+total mins)\n"
+
+    #Display the results
+    msgbox(text, "Weekly Analytics")
+    home_page()
+        
+
 #The page where the other pages can be accessed from.
 def home_page():
     pages = ["Add Entry", "View History", "Weekly Analytics", "Leave"]
