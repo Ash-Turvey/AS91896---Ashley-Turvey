@@ -58,5 +58,15 @@
         "timestamp": "2026-06-12 09:33:56",
         "activity": "Family/Friends",
         "minutes": 12
+    },
+    {
+        "timestamp": "2026-06-15 09:02:49",
+        "activity": "Family/Friends",
+        "minutes": 123
+    },
+    {
+        "timestamp": "2026-06-15 09:03:01",
+        "activity": "Family/Friends",
+        "minutes": 123
     }
 ]

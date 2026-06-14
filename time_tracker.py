@@ -3,34 +3,34 @@ import easygui
 from easygui import *
 import sys
 from datetime import datetime
-from collections import defaultdict
 
-entry_list = {
-    
+entry_list = {   
 }
 
-#Pull data from json file
+# Pull data from json file
 def load_data():
     with open("activity_list.json", "r") as file:
         return json.load(file)
 
-#Save data to json file
+
+# Save data to json file
 def save_data(data):
     with open("activity_list.json", "w") as file:
         json.dump(data, file, indent = 4)
 
-#Check to make sure that the input is able to be used
+
+# Check to make sure that the input is able to be used
 def validate_input(input_):
     while True:
         value = easygui.enterbox(input_)
 
-        #check if they clicked the cancel or X button
+        # Check if they clicked the cancel or X button
         if value is None:
             msgbox("Going home...")
             home_page()
 
-        #Make sure they have inputted a valid input, and make sure the
-        #amount they picked is no longer than a day.
+        # Make sure they have inputted a valid input, and make sure the
+        # amount they picked is no longer than a day.
         try:
             minutes = int(value)
 
@@ -42,16 +42,17 @@ def validate_input(input_):
                 msgbox("Activity cannot be longer than 1 day.")
                 continue
             else:
-                        #give back the valid input to be used
+                        # give back the valid input to be used
                 return minutes
 
         except ValueError:
             msgbox("That's not a number. Try again.")
 
-#Make a time entry
+
+# Make a time entry
 def add_activity_page():
     activities = ["Study/Work", "Sport", "Music", "Screen", "Family/Friends", \
-"Other"]
+                  "Other"]
     activities_select = easygui.choicebox("Which catagory would you like to \
 make an entry for?", "activities_select", activities)
     
@@ -63,10 +64,11 @@ make an entry for?", "activities_select", activities)
 doing {activities_select}?")
         
         if activities_hours is not None:
-            #Load data
+
+            # Load data onto the variable entry_list
             entry_list = load_data()
 
-            #Add dictionary to the list
+            # Add dictionary to the list
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             entry_list.append({
                 "timestamp": timestamp,
@@ -74,11 +76,12 @@ doing {activities_select}?")
                 "minutes": activities_hours
             })
 
-            #Save it back
+            # Save it back
             save_data(entry_list)
             home_page()
 
-#Show whole history
+
+# Show whole history
 def history_page():
     history_pull = load_data() 
     grouped_data = {}
@@ -89,18 +92,18 @@ def history_page():
         activity_name = item["activity"]
         minutes = item["minutes"]
         
-        #Make sure the date dictionary exists
+        # Make sure the date dictionary exists
         if date_only not in grouped_data:
             grouped_data[date_only] = {}
             
-        #Make sure the activity key exists under the date
+        # Make sure the activity key exists under the date
         if activity_name not in grouped_data[date_only]:
             grouped_data[date_only][activity_name] = 0
             
-        #Add the minutes
+        # Add the minutes
         grouped_data[date_only][activity_name] += minutes
 
-    #Make the output text window
+    # Make the output text window
     final_output = ""
     for date, activities in sorted(grouped_data.items()):
         final_output += f"Date: {date}\n"
@@ -114,16 +117,22 @@ def history_page():
     msgbox(final_output)
     home_page()
 
-#Show daily average for activities in the past 7 days, and show most
-#done activities
+
+# Show daily average for activities in the past 7 days, and show most
+# logged activities
 def analytics_page():
 
+    # making a variable that has my json file on it
     activity_data = load_data()
 
+    # Checking to see if they have any data inputted. If not, sending
+    # back to the home page.
     if not activity_data:
         msgbox("You have input data to view your analytics")
         home_page()
 
+    # Make a list that will have the total minutes for each activity and
+    # how many times each activity was used
     screen = [0, 0]
     sport = [0, 0]
     work = [0, 0]
@@ -131,15 +140,16 @@ def analytics_page():
     music = [0, 0]
     other = [0, 0]
 
-    now = datetime.now()
     data = False
 
+    # Go through the data, and add the minutes and amount of entries to
+    # the appropiate lists.
     for entry in activity_data:
         data = True
         category = entry["activity"]
         mins = entry["minutes"]
 
-            # Match and update your specific category lists
+        # Match and update the specific category in the lists
         if category == "Screen":
             screen[0] += mins
             screen[1] += 1
@@ -159,10 +169,14 @@ def analytics_page():
             other[0] += mins
             other[1] += 1
 
+        # If they input data just not in the last 7 days, then display
+        # message
         if not data:
             msgbox("No activity tracked in the past 7 days!")
             return home_page()
         
+        # Shows the total unupdated amount of times each activity was 
+        # entered
         totals = {
         "Screen": screen[0],
         "Sport": sport[0],
@@ -172,27 +186,31 @@ def analytics_page():
         "Other": other[0]
     }
 
-    #Find the activity name with the most total minutes
+    # Find the activity name with the most total minutes
     popular_activity = max(totals, key=totals.get)
 
-    #Make the output text display
+    # Build the text display so we can print it cleanly at the end
     text = "Past 7 Days Analytics\n\n"
-    text += "Daily Averages (Total minuntes a 7 days):\n"
+    text += "Daily Averages:\n"
     
     for activity_name, total_mins in totals.items():
+
+        # Dividing the total minutes of the past 7 days by 7  
         daily_avg = total_mins / 7.0
+        
+        # Building each activities line and adding it to text
         text += f"  - {activity_name}: {daily_avg:.1f} mins a day\n"
 
     text += f"\nMost Used Activity:\n"
     text += f"  - {popular_activity} ({totals[popular_activity]} \
 total mins)\n"
 
-    #Display the results
+    # Display the results
     msgbox(text, "Weekly Analytics")
     home_page()
-        
 
-#The page where the other pages can be accessed from.
+
+# The page where the other pages can be accessed from.
 def home_page():
     pages = ["Add Entry", "View History", "Weekly Analytics", "Leave"]
     home = easygui.buttonbox("Welcome to Wiggles Time Tracker!", "homepage",\
@@ -206,8 +224,5 @@ pages)
     else:
         sys.exit()
 
+
 home_page()
-
-
-
-#I need to continue the analytics page. 
