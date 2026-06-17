@@ -68,5 +68,50 @@
         "timestamp": "2026-06-15 09:03:01",
         "activity": "Family/Friends",
         "minutes": 123
+    },
+    {
+        "timestamp": "2026-06-16 14:36:01",
+        "activity": "Family/Friends",
+        "minutes": 23
+    },
+    {
+        "timestamp": "2026-06-16 14:36:13",
+        "activity": "Other",
+        "minutes": 345
+    },
+    {
+        "timestamp": "2026-06-16 14:42:43",
+        "activity": "Music",
+        "minutes": 232
+    },
+    {
+        "timestamp": "2026-06-16 14:43:31",
+        "activity": "Music",
+        "minutes": 98
+    },
+    {
+        "timestamp": "2026-06-17 13:45:46",
+        "activity": "Music",
+        "minutes": 30
+    },
+    {
+        "timestamp": "2026-06-17 13:45:54",
+        "activity": "Screen",
+        "minutes": 180
+    },
+    {
+        "timestamp": "2026-06-17 13:46:04",
+        "activity": "Sport",
+        "minutes": 50
+    },
+    {
+        "timestamp": "2026-06-17 13:46:13",
+        "activity": "Family/Friends",
+        "minutes": 60
+    },
+    {
+        "timestamp": "2026-06-17 13:46:29",
+        "activity": "Other",
+        "minutes": 60
     }
 ]
